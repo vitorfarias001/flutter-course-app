@@ -1,6 +1,10 @@
 import 'package:course_app/app_blocs.dart';
+import 'package:course_app/app_events.dart';
+import 'package:course_app/pages/welcome/bloc/welcome_blocs.dart';
+import 'package:course_app/pages/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppBlocs(),
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: MyHomePage(title: 'App'),
-      ),
-    );
+        create: (context) => WelcomeBloc(),
+        child: ScreenUtilInit(
+          builder: (context, child) => const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Welcome(),
+          ),
+        ));
   }
 }
 
@@ -31,20 +36,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,12 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('Push'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            )
+          children: const <Widget>[
+            Text('Push'),
           ],
         ),
       ),
@@ -67,12 +54,14 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           FloatingActionButton(
-            onPressed: _incrementCounter,
+            onPressed: () =>
+                BlocProvider.of<AppBlocs>(context).add(Increment()),
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
           FloatingActionButton(
-            onPressed: _decrementCounter,
+            onPressed: () =>
+                BlocProvider.of<AppBlocs>(context).add(Decrement()),
             tooltip: 'Decrement',
             child: const Icon(Icons.remove),
           )
